@@ -17,7 +17,7 @@ export enum Rarity {
 
 export enum SetID {
   Ink = 'INK',
-  Rof = 'ROF',
+  Rotf = 'ROTF',
   Tfc = 'TFC',
 }
 

@@ -1,22 +1,23 @@
 import './globals.css'
 
-import { useMemo } from 'react'
+import { useState } from 'react'
 
 import { Header } from '@/components/header'
 
-import cardData from './assets/cards.json'
 import { ThemeProvider } from './components/theme/theme-provider'
+import { Button } from './components/ui/button'
+import { generatePack } from './lib/generate-pack'
+import { Card } from './types'
 
 export function App() {
-  const { cards } = cardData
+  const [packs, setPacks] = useState<Card[][]>(() =>
+    Array.from({ length: 6 }).map(() => generatePack()),
+  )
 
-  const displayCards = useMemo(() => {
-    return Array.from({ length: 16 }).map(() => {
-      const cardIndex = Math.floor(Math.random() * cards.length) + 1
-
-      return cards[cardIndex]
-    })
-  }, [cards])
+  function handleClick() {
+    const packs = Array.from({ length: 6 }).map(() => generatePack())
+    setPacks(packs)
+  }
 
   return (
     <ThemeProvider
@@ -26,12 +27,20 @@ export function App() {
       <div className="flex min-h-screen flex-col antialiased">
         <Header />
 
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <Button onClick={handleClick}>Generate Pack</Button>
           <div className="grid grid-cols-8 gap-4">
-            {displayCards.map((card) => (
-              <div key={card.name}>
-                <img src={card.image} />
-                <span>{card.name}</span>
+            {packs.map((pack, index) => (
+              <div key={index}>
+                Pack {index + 1}
+                {pack.map((card) => {
+                  return (
+                    <div key={card.name}>
+                      <img src={card.image} alt={card.name} />
+                      <span>{card.name}</span>
+                    </div>
+                  )
+                })}
               </div>
             ))}
           </div>
